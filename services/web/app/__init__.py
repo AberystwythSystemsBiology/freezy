@@ -17,7 +17,7 @@ login_manager = LoginManager()
 
 make_versioned(plugins=[FlaskPlugin(), PropertyModTrackerPlugin()])
 
-# Blueprints
+# Blueprint import goes here
 from .auth import auth as auth_blueprint
 from .panel import panel as panel_blueprint
 
