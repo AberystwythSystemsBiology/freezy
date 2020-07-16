@@ -1,0 +1,104 @@
+{% macro render_form_error(field) -%}
+    {% if field.description %}
+    <span class="form-description form-text text-muted">{{field.description}}</span>
+    {%endif%}
+    {% if field.errors %}
+    <p class="form-error">{{ field.errors|join(', ') }}</p>
+    {% endif %}
+{%- endmacro %}
+
+
+{% macro form_field(field) -%}
+
+    {% set with_label = kwargs.pop('with_label', True) %}
+    {% set with_quantity = kwargs.pop('q', False) %}
+
+    <div class="form-group {% if field.errors %}error{% endif %}" id="{{ field.id }}_div">
+        
+
+    {% if field.type == "BooleanField" %}
+    <div class="form-check">
+        
+            <input class="form-check-input" id="{{ field.id }}" name="{{ field.id }}" type="checkbox">
+            <label class="form-check-label" for="{{ field.id }}">
+                {{ field.label.text }}
+            </label>
+            </div>
+        {% elif field.type in (["StringField", "DecimalField", "FloatField"]) %}
+
+               <label for="{{ field.id }}">{{ field.label.text }}{% if field.flags.required %} <span class="imp">(*)</span>{% endif %} </label>
+                {{render_form_error(field) }}
+
+                {% if with_quantity %}
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text quantity-text"></div>
+                        </div>
+                        <input type="text" class="form-control" id="{{ field.id }}" name="{{ field.name }}"{% if field.flags.required %}required{% endif %}>
+                    </div>
+                {% else %}
+                    {{ field(class="form-control") }}
+                {% endif %}
+        {% elif field.type == "SelectField" %}
+                <label for="{{ field.id }}">{{ field.label.text }} </label>
+                {{render_form_error(field) }}
+                {{ field(class="form-control selectpicker", **{"data-live-search": "true"}) }}
+        {% elif field.type == "DateField" %}
+                <label for="{{ field.id }}">{{ field.label.text }}{% if field.flags.required %} <span class="imp">(*)</span>{% endif %}</label>
+                {{render_form_error(field) }}
+
+                {{ field(class="form-control", type="date") }}
+        {% elif field.type == "TimeField" %}
+                <label for="{{ field.id }}">{{ field.label.text }}{% if field.flags.required %} <span class="imp">(*)</span>{% endif %}</label>
+                {{render_form_error(field) }}
+
+                {{ field(class="form-control", type="time") }}
+        {% elif field.type == "RadioField" %}
+                <div class="col-form-label">
+                    {{ field.label.text }}:
+                </div>
+                {{render_form_error(field) }}
+            {% for key, value, bo in field.iter_choices() %}
+                <div class="form-check form-check-inline">
+                    <input type="radio" class="form-check-input"  name="{{ field.id }}" value="{{ key }}" checked>
+                    <label class="form-check-label" for="{{ field.id }}">{{ value }}</label>
+                </div>
+            {% endfor %}
+        {% elif field.type == "PasswordField" %}
+                <label for="{{ field.id }}">{{ field.label.text }}{% if field.flags.required %} <span class="imp">(*)</span>{% endif %}</label>
+                {{render_form_error(field) }}
+                {{ field(class="form-control", type="password") }}
+        {% elif field.type == "FileField" %}
+                <label for="{{ field.id }}">{{ field.label.text }}{% if field.flags.required %} <span class="imp">(*)</span>{% endif %}</label>
+                {{render_form_error(field) }}
+                <input type="file" class="form-control-file" id="{{ field.id }}" name="{{ field.name }}"
+                   {% if field.flags.required %}required{% endif %}>
+        {% elif field.type == "IntegerField" %}
+                <label for="{{ field.id }}">{{ field.label.text }}{% if field.flags.required %} <span class="imp">(*)</span>{% endif %}</label>
+                {{render_form_error(field) }}
+                {{ field(class="form-control", type="number") }}
+        {% elif field.type == "SubmitField" %}
+                <button type="submit" class="btn btn-success float-right top10" id="{{ field.id }}">
+                    <i class="fa fa-check"></i> {{ field.label.text }}
+                </button>
+        {% endif %}
+    </div>
+
+{%- endmacro %}
+
+
+{% macro show_value(attribute, label, type) -%}
+    <div class="row" style="padding-bottom: 1em;">
+        <div class="col-5">{{ label }}:</div>
+        <div class="col-7">
+            {% if type == "enum" %}
+                {{ attribute.value }}
+            {% elif type == "datetime" %}
+                {{ attribute.strftime('%d-%m-%Y') }}
+            {% else %}
+                {{ attribute }}
+            {% endif %}
+        </div>
+    </div>
+
+{%- endmacro %}

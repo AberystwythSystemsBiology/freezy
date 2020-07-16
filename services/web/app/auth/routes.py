@@ -9,6 +9,8 @@ from .models import UserAccount
 
 @auth.route("/login", methods=["GET", "POST"])
 def login():
+    if current_user.is_authenticated:
+        logout_user()
     form = LoginForm()
     if form.validate_on_submit():
         user = db.session.query(UserAccount).filter(UserAccount.username == form.username.data).first()
