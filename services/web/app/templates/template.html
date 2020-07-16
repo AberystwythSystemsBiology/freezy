@@ -1,3 +1,5 @@
+{% from "macros.html" import form_field, show_value %}
+
 <html lang="en">
 
 <head>
@@ -28,8 +30,60 @@
 </head>
 
 <body>
-{% block body %}
-{% endblock %}
+
+<div id="wrapper" class="active">
+
+    <div id="sidebar-wrapper">
+        <ul id="sidebar_menu" class="sidebar-nav">
+           <li class="sidebar-brand"><a id="menu-toggle" href="#">Freezy<img class="main_icon" src="{{ url_for('static', filename='imgs/logos/200px.png') }}"></a></li>
+        </ul>
+        {% if current_user.is_authenticated %}
+        <ul class="sidebar-nav" id="sidebar">
+          <li><a>Cadastro<span class="sub_icon glyphicon glyphicon-link"></span></a></li>
+           <ul class="sidebar-nav" id="sidebar">
+                <li><a>link1<span class="sub_icon glyphicon glyphicon-link"></span></a></li>
+                <li><a>link2<span class="sub_icon glyphicon glyphicon-link"></span></a></li>
+           </ul>
+          <li><a>Consulta<span class="sub_icon glyphicon glyphicon-link"></span></a></li>
+          <li><a>Relatorio<span class="sub_icon glyphicon glyphicon-link"></span></a></li>
+        </ul>
+        {% else %}
+
+        {%endif%}
+      </div>
+
+      <div id="page-content-wrapper">
+        <div class="page-content inset">
+            <div id="page-container">
+                {% block body %}
+                {% endblock %}
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
 </body>
 
+<script src="{{ url_for('static', filename='node_modules/jquery/dist/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='node_modules/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ url_for('static', filename='node_modules/datatables.net/js/jquery.dataTables.js') }}"></script>
+<script src="{{ url_for('static', filename='node_modules/datatables.net-bs4/js/dataTables.bootstrap4.js') }}"></script>
+<script src="{{ url_for('static', filename='node_modules/datatables.net-searchpanes/js/dataTables.searchPanes.js') }}"></script>
+<script src="{{ url_for('static', filename='node_modules/datatables.net-select/js/dataTables.select.js') }}"></script>
+<script src="{{ url_for('static', filename='node_modules/d3/dist/d3.js') }}"></script>
+<script src="{{ url_for('static', filename='node_modules/jstree/dist/jstree.min.js') }}"></script>
+<script src="{{ url_for('static', filename='node_modules/bootstrap-select/dist/js/bootstrap-select.min.js') }}"></script>
+
+<script src="{{ url_for('static', filename='js/all.js') }}"></script>
+
+
+{% block javascript %}
+
+{% endblock %}
+
+
 </html>
+
