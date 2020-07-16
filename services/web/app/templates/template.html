@@ -1,0 +1,35 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=0.8">
+    <meta name="author" content="Keiron O'Shea">
+    <title>{% block title %}{% endblock %} : Freezy</title>
+
+    <link href="{{ url_for('static', filename='node_modules/bootstrap/dist/css/bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='node_modules/@fortawesome/fontawesome-free/css/all.css') }}"
+          rel="stylesheet">
+    <link href="{{ url_for('static', filename='node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css') }}"
+          rel="stylesheet">
+    <link href="{{ url_for('static', filename='node_modules/datatables.net-searchpanes-dt/css/searchPanes.dataTables.min.css') }}"
+          rel="stylesheet">
+    <link href="{{ url_for('static', filename='node_modules/jstree/dist/themes/default/style.min.css') }}"
+          rel="stylesheet">
+    <link href="{{ url_for('static', filename='node_modules/bootstrap-select/dist/css/bootstrap-select.min.css') }}"
+          rel="stylesheet">
+
+    {% block head %}
+    {% endblock %}
+
+    <link href="{{ url_for('static', filename='css/global.css') }}" rel="stylesheet">
+
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='imgs/logos/logo.svg') }}"/>
+</head>
+
+<body>
+{% block body %}
+{% endblock %}
+</body>
+
+</html>
