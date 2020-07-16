@@ -3,7 +3,7 @@ from flask_login import UserMixin
 import hashlib
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from app import db, login_manager
+from .. import db, login_manager
 
 class UserAccount(UserMixin, db.Model):
     __versioned__ = {}
