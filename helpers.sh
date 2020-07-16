@@ -14,8 +14,15 @@ function freezy-bwd() {
 function python-deps() {
     echo ">>> Setting up Python dependencies:"
     docker-compose run web sh -c "python3 -m venv venv && venv/bin/pip install wheel"
+    docker-compose run web sh -c "python3 -m venv venv && venv/bin/pip install flask_script"
     docker-compose run web sh -c "python3 -m venv venv && venv/bin/pip install -r requirements.txt"
 }
+
+function freezy-test-admin() {
+    docker-compose run web sh -c "venv/bin/python manage.py create_admin"
+}
+
+
 
 function yarn-deps() {
     echo ">>> Running yarn install:"

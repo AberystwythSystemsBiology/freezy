@@ -19,6 +19,7 @@ make_versioned(plugins=[FlaskPlugin(), PropertyModTrackerPlugin()])
 
 # Blueprints
 from .auth import auth as auth_blueprint
+from .panel import panel as panel_blueprint
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
@@ -36,6 +37,7 @@ def create_app():
     # Load in models here
     from .auth import models as auth_models
 
-    app.register_blueprint(auth_blueprint)
+    app.register_blueprint(auth_blueprint, url_prefix="/auth")
+    app.register_blueprint(panel_blueprint)
 
     return app

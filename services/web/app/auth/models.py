@@ -1,12 +1,10 @@
 
 from flask_login import UserMixin
-import hashlib
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from .. import db, login_manager
 
 class UserAccount(UserMixin, db.Model):
-    __versioned__ = {}
     __tablename__= "user_accounts"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -31,4 +29,4 @@ class UserAccount(UserMixin, db.Model):
 
 @login_manager.user_loader
 def load_user(user_id: int) -> UserAccount:
-    return db.session.query(UserAccount).filter(UserAccount.user_id == user_id).first()
+    return db.session.query(UserAccount).filter(UserAccount.id == user_id).first()
