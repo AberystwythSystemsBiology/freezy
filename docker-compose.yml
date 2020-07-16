@@ -6,7 +6,7 @@ services:
       context: ./services/web
       dockerfile: Dockerfile
     volumes:
-      - ./services/web/:/freezer/
+      - ./services/web/:/freezy/
     expose:
       - 5000
     ports:
