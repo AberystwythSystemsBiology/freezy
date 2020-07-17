@@ -1,7 +1,8 @@
 import marshmallow_sqlalchemy as masql
 from marshmallow import Schema, fields
-from .models import Site, FixedColdStorage, Shelf, Drawer, Box
+from .. import ma
 
+from .models import Site, FixedColdStorage, Shelf, Drawer, Box
 
 class FixedColdStorageSchema(masql.SQLAlchemySchema):
     class Meta:
@@ -11,8 +12,29 @@ class FixedColdStorageSchema(masql.SQLAlchemySchema):
     name = masql.auto_field()
     created_on = masql.auto_field()
 
+
 fcs_schema = FixedColdStorageSchema()
 fcscomma_schema = FixedColdStorageSchema(many=True)
+
+class SiteSchema(masql.SQLAlchemySchema):
+
+    class Meta:
+        model = Site
+
+    id = masql.auto_field()
+    name = masql.auto_field()
+    storage = ma.Nested(FixedColdStorageSchema, many=True)
+    created_on = masql.auto_field()
+    created_by = masql.auto_field()
+
+    _links = ma.Hyperlinks(
+        {"self": ma.URLFor("storage.site_detail", id="<id>"), "collection": ma.URLFor("storage.sites")}
+    )
+
+site_schema = SiteSchema()
+sites_schema = SiteSchema(many=True)
+
+
 
 class ShelfSchema(masql.SQLAlchemySchema):
     class Meta:
@@ -24,21 +46,6 @@ class ShelfSchema(masql.SQLAlchemySchema):
 
 shelf_schema = ShelfSchema()
 shelves_schema = ShelfSchema(many=True)
-
-class SiteSchema(masql.SQLAlchemySchema):
-    storage = fields.Nested(FixedColdStorageSchema)
-
-    class Meta:
-        model = Site
-        load_instance = True
-
-    id = masql.auto_field()
-    name = masql.auto_field()
-    created_on = masql.auto_field()
-    created_by = masql.auto_field()
-
-site_schema = SiteSchema()
-sites_schema = SiteSchema(many=True)
 
 
 class DrawerSchema(masql.SQLAlchemySchema):

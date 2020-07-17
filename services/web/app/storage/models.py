@@ -9,6 +9,8 @@ class Site(db.Model):
 
     name = db.Column(db.String(256), nullable=False)
 
+    storage = db.relationship("FixedColdStorage", backref="site")
+
     created_on = db.Column(db.DateTime, server_default=db.func.now())
     created_by = db.Column(db.Integer, db.ForeignKey("user_accounts.id"))
 
@@ -21,6 +23,9 @@ class FixedColdStorage(db.Model):
     name = db.Column(db.String(256), nullable=False)
     type = db.Column(db.Enum(ColdStorageType))
     temperature = db.Column(db.String(10))
+
+    site_id = db.Column(db.Integer, db.ForeignKey("sites.id"))
+
     created_on = db.Column(db.DateTime, server_default=db.func.now())
     created_by = db.Column(db.Integer, db.ForeignKey("user_accounts.id"))
 
