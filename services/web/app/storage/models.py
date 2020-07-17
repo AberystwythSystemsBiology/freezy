@@ -37,6 +37,10 @@ class Shelf(db.Model):
     created_on = db.Column(db.DateTime, server_default=db.func.now())
     created_by = db.Column(db.Integer, db.ForeignKey("user_accounts.id"))
 
+class DrawerSizes(Enum):
+    L = "Large"
+    S = "Small"
+
 class Drawer(db.Model):
     __versioned__ = {}
     __tablename__ = "drawers"
