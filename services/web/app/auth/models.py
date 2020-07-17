@@ -14,7 +14,7 @@ class UserAccount(UserMixin, db.Model):
 
     is_admin = db.Column(db.Boolean, default=False)
 
-    creation_date = db.Column(db.DateTime, server_default=db.func.now())
+    created_on = db.Column(db.DateTime, server_default=db.func.now())
 
     @property
     def password(self) -> AttributeError:
