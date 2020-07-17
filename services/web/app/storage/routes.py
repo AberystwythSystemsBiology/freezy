@@ -3,7 +3,8 @@ from flask_login import current_user
 import json
 
 from . import storage
-from .views import site_schema, sites_schema
+from .views import *
+
 from .models import Site, FixedColdStorage, Shelf, Box, Drawer
 from .. import db
 
@@ -13,12 +14,12 @@ from ..decorators import token_authorise
 def storage_index():
     return "Hello World"
 
-@storage.route("/api/sites/")
+@storage.route("/api/site/")
 @token_authorise
 def sites():
     return {"results": sites_schema.dump(Site.query.all())}
 
-@storage.route("/api/sites/<id>")
+@storage.route("/api/site/<id>")
 @token_authorise
 def site_detail(id):
     return site_schema.dump(Site.query.filter_by(id = id).first())
@@ -26,22 +27,42 @@ def site_detail(id):
 @storage.route("/api/fcs/")
 @token_authorise
 def fixed_cold_storage():
-    return {"results": sites_schema.dump(FixedColdStorage.query.all())}
+    return {"results": fcscomma_schema.dump(FixedColdStorage.query.all())}
 
 @storage.route("/api/fcs/<id>")
 @token_authorise
 def fixed_cold_storage_detail(id):
-    return site_schema.dump(FixedColdStorage.query.filter_by(id = id).first())
+    return fcs_schema.dump(FixedColdStorage.query.filter_by(id = id).first())
 
 @storage.route("/api/shelf/")
 @token_authorise
 def shelves():
-    return {"results": sites_schema.dump(FixedColdStorage.query.all())}
+    return {"results": shelves_schema.dump(Shelf.query.all())}
 
 @storage.route("/api/shelf/<id>")
 @token_authorise
 def shelf_detail(id):
-    return site_schema.dump(FixedColdStorage.query.filter_by(id = id).first())
+    return shelf_schema.dump(Shelf.query.filter_by(id = id).first())
+
+@storage.route("/api/drawer/")
+@token_authorise
+def drawers():
+    return {"results": drawers_schema.dump(Shelf.query.all())}
+
+@storage.route("/api/drawer/<id>")
+@token_authorise
+def drawer_detail(id):
+    return drawer_schema.dump(Drawer.query.filter_by(id = id).first())
+
+@storage.route("/api/box/")
+@token_authorise
+def box():
+    return {"results": boxes_schema.dump(Box.query.all())}
+
+@storage.route("/api/box/<id>")
+@token_authorise
+def box_detail(id):
+    return box_schema.dump(Box.query.filter_by(id = id).first())
 
 
 @storage.route("/api/add/<entity>", methods=["POST"])

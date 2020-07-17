@@ -44,6 +44,7 @@ class Drawer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     name = db.Column(db.String(256), nullable=False)
+    size = db.Column(db.Enum(DrawerSizes))
 
     created_on = db.Column(db.DateTime, server_default=db.func.now())
     created_by = db.Column(db.Integer, db.ForeignKey("user_accounts.id"))
@@ -58,6 +59,24 @@ class Box(db.Model):
 
     rows = db.Column(db.Integer, nullable=False)
     cols = db.Column(db.Integer, nullable=False)
+
+    created_on = db.Column(db.DateTime, server_default=db.func.now())
+    created_by = db.Column(db.Integer, db.ForeignKey("user_accounts.id"))
+
+class EntityToStorage(db.Model):
+    __versioned__ = {}
+    __tablename__ = "entity_to_storage"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    sample_id = db.Column(db.Integer)
+    box_id = db.Column(db.Integer, db.ForeignKey("shelves.id"))
+    shelf_id = db.Column(db.Integer, db.ForeignKey("shelves.id"))
+    drawer_id = db.Column(db.Integer, db.ForeignKey("drawers.id"))
+    storage_id = db.Column(db.Integer, db.ForeignKey("storage.id"))
+    site_id = db.Column(db.Integer, db.ForeignKey("sites.id"))
+
+    type = db.Column(db.Enum(EntityToStorageType), nullable=False)
 
     created_on = db.Column(db.DateTime, server_default=db.func.now())
     created_by = db.Column(db.Integer, db.ForeignKey("user_accounts.id"))
