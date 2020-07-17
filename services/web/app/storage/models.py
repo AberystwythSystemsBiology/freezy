@@ -19,7 +19,8 @@ class FixedColdStorage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     name = db.Column(db.String(256), nullable=False)
-
+    type = db.Column(db.Enum(ColdStorageType))
+    temperature = db.Column(db.String(10))
     created_on = db.Column(db.DateTime, server_default=db.func.now())
     created_by = db.Column(db.Integer, db.ForeignKey("user_accounts.id"))
 
@@ -34,8 +35,6 @@ class Shelf(db.Model):
 
     created_on = db.Column(db.DateTime, server_default=db.func.now())
     created_by = db.Column(db.Integer, db.ForeignKey("user_accounts.id"))
-
-
 
 class Drawer(db.Model):
     __versioned__ = {}

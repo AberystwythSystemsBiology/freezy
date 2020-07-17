@@ -5,7 +5,7 @@ import json
 from . import storage
 from .views import *
 
-from .models import Site, FixedColdStorage, Shelf, Box, Drawer
+from .models import Site, FixedColdStorage, Shelf, Box, Drawer, EntityToStorage
 from .. import db
 
 from ..decorators import token_authorise
@@ -64,7 +64,6 @@ def box():
 def box_detail(id):
     return box_schema.dump(Box.query.filter_by(id = id).first())
 
-
 @storage.route("/api/add/<entity>", methods=["POST"])
 @token_authorise
 def add_storage_entity(entity):
@@ -93,3 +92,39 @@ def add_storage_entity(entity):
 
     return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
+@storage.route("/api/move", methods=["POST"])
+@token_authorise
+def move_storage_entity():
+    r = request.json
+
+    # Storage to Site
+    if r["type"] == "STSI":
+        ets = EntityToStorage.query.filter(storage_id=r["storage_id"], type=r["type"]).first()
+        if ets == None:
+            ets = EntityToStorage()
+        ets.storage_id = r["storage_id"]
+        ets.site_id = r["site_id"]
+
+    # Drawer to Shelf
+    elif r["type"] == "DTSH":
+        ets = EntityToStorage.query.filter(drawer_id=r["drawer_id"], type=["type"]).first()
+        if ets == None:
+            ets = EntityToStorage()
+        ets.shelf_id = r["shelf_id"]
+        ets.drawer_id = r["drawer_id"]
+
+    # Shelf to Storage
+    elif r["type"] == "STST":
+        ets = EntityToStorage.query.filter(shelf_id=r["shelf_id"], type=["type"]).first()
+        if ets == None:
+            ets = EntityToStorage()
+        ets.shelf_id = r["shelf_id"]
+        ets.storage_id = r["storage_id"]
+
+    ets.created_by = current_user.id
+    ets.type = r["type"]
+
+    db.session.add(ets)
+    db.session.commit()
+
+    return json.dumps({'success': r}), 200, {'ContentType': 'application/json'}
