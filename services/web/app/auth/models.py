@@ -17,8 +17,8 @@ class UserAccount(UserMixin, db.Model):
     created_on = db.Column(db.DateTime, server_default=db.func.now())
 
     @property
-    def password(self) -> AttributeError:
-        raise AttributeError("No.")
+    def password(self) -> str:
+        return "hunter2"
 
     @password.setter
     def password(self, password: str) -> None:

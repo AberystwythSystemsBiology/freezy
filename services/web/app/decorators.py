@@ -1,8 +1,9 @@
 from flask import abort, request
-from flask_login import current_user, login_required
+from flask_login import current_user, login_user
+from datetime import timedelta
 
 from functools import wraps
-from .auth.models import UserAccountToken
+from .auth.models import UserAccountToken, UserAccount
 
 def token_authorise(f):
     @wraps(f)
@@ -13,8 +14,8 @@ def token_authorise(f):
                 username = request.headers["Username"]
                 token = request.headers["User-Token"]
                 uat = UserAccountToken.query.filter_by(username=username).first()
-
                 if uat is not None and uat.verify_token(token):
+                    login_user(UserAccount.query.filter_by(id = uat.account_id).first(), duration=timedelta(minutes=5))
                     return f(*args, **kwargs)
                 else:
                     abort(401)

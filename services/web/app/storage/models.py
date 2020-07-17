@@ -32,8 +32,6 @@ class Shelf(db.Model):
 
     name = db.Column(db.String(256), nullable=False)
 
-    storage_id = db.Column(db.Integer, db.ForeignKey("storage.id"))
-
     created_on = db.Column(db.DateTime, server_default=db.func.now())
     created_by = db.Column(db.Integer, db.ForeignKey("user_accounts.id"))
 
@@ -46,8 +44,6 @@ class Drawer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     name = db.Column(db.String(256), nullable=False)
-
-    shelf_id = db.Column(db.Integer, db.ForeignKey("shelves.id"))
 
     created_on = db.Column(db.DateTime, server_default=db.func.now())
     created_by = db.Column(db.Integer, db.ForeignKey("user_accounts.id"))
@@ -62,8 +58,6 @@ class Box(db.Model):
 
     rows = db.Column(db.Integer, nullable=False)
     cols = db.Column(db.Integer, nullable=False)
-
-    shelf_id = db.Column(db.Integer, db.ForeignKey("shelves.id"))
 
     created_on = db.Column(db.DateTime, server_default=db.func.now())
     created_by = db.Column(db.Integer, db.ForeignKey("user_accounts.id"))
