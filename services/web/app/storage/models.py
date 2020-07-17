@@ -1,5 +1,5 @@
 from .. import db
-from enum import Enum
+from .enums import *
 
 class Site(db.Model):
     __versioned__ = {}
@@ -37,9 +37,7 @@ class Shelf(db.Model):
     created_on = db.Column(db.DateTime, server_default=db.func.now())
     created_by = db.Column(db.Integer, db.ForeignKey("user_accounts.id"))
 
-class DrawerSizes(Enum):
-    L = "Large"
-    S = "Small"
+
 
 class Drawer(db.Model):
     __versioned__ = {}
@@ -70,12 +68,6 @@ class Box(db.Model):
     created_on = db.Column(db.DateTime, server_default=db.func.now())
     created_by = db.Column(db.Integer, db.ForeignKey("user_accounts.id"))
 
-class EntityToStorageType(Enum):
-    STBO = "Sample to Box"
-    STDR = "Sample to Drawer"
-    DTSH = "Drawer to Shelf"
-    STST = "Shelf to Storage"
-    STSI = "Storage to Site"
 
 
 class EntityToStorage(db.Model):
