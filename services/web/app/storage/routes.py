@@ -99,27 +99,28 @@ def move_storage_entity():
 
     # Storage to Site
     if r["type"] == "STSI":
-        ets = EntityToStorage.query.filter(storage_id=r["storage_id"], type=r["type"]).first()
+        ets = EntityToStorage.query.filter_by(storage_id=r["storage_id"], type=r["type"]).first()
         if ets == None:
             ets = EntityToStorage()
         ets.storage_id = r["storage_id"]
         ets.site_id = r["site_id"]
 
+    # Shelf to Storage
+    elif r["type"] == "STST":
+        ets = EntityToStorage.query.filter_by(shelf_id=r["shelf_id"], type=["type"]).first()
+        if ets == None:
+            ets = EntityToStorage()
+        ets.shelf_id = r["shelf_id"]
+        ets.storage_id = r["storage_id"]
+
     # Drawer to Shelf
     elif r["type"] == "DTSH":
-        ets = EntityToStorage.query.filter(drawer_id=r["drawer_id"], type=["type"]).first()
+        ets = EntityToStorage.query.filter_by(drawer_id=r["drawer_id"], type=["type"]).first()
         if ets == None:
             ets = EntityToStorage()
         ets.shelf_id = r["shelf_id"]
         ets.drawer_id = r["drawer_id"]
 
-    # Shelf to Storage
-    elif r["type"] == "STST":
-        ets = EntityToStorage.query.filter(shelf_id=r["shelf_id"], type=["type"]).first()
-        if ets == None:
-            ets = EntityToStorage()
-        ets.shelf_id = r["shelf_id"]
-        ets.storage_id = r["storage_id"]
 
     ets.created_by = current_user.id
     ets.type = r["type"]
