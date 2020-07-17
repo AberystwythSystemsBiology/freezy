@@ -4,7 +4,7 @@ import json
 
 from . import storage
 from .views import site_schema, sites_schema
-from .models import Site, FixedColdStorage, Shelf
+from .models import Site, FixedColdStorage, Shelf, Box, Drawer
 from .. import db
 
 from ..decorators import token_authorise
@@ -16,66 +16,59 @@ def storage_index():
 @storage.route("/api/sites/")
 @token_authorise
 def sites():
-    all_sites = db.session.query(Site).all()
-    return {"results": sites_schema.dump(all_sites)}
+    return {"results": sites_schema.dump(Site.query.all())}
 
 @storage.route("/api/sites/<id>")
 @token_authorise
 def site_detail(id):
-    site = db.session.query(Site).filter(Site.id == id).first()
-    return site_schema.dump(site)
+    return site_schema.dump(Site.query.filter_by(id = id).first())
 
-@storage.route("/api/add/site", methods=["POST"])
+@storage.route("/api/fcs/")
 @token_authorise
-def add_site():
+def fixed_cold_storage():
+    return {"results": sites_schema.dump(FixedColdStorage.query.all())}
+
+@storage.route("/api/fcs/<id>")
+@token_authorise
+def fixed_cold_storage_detail(id):
+    return site_schema.dump(FixedColdStorage.query.filter_by(id = id).first())
+
+@storage.route("/api/shelf/")
+@token_authorise
+def shelves():
+    return {"results": sites_schema.dump(FixedColdStorage.query.all())}
+
+@storage.route("/api/shelf/<id>")
+@token_authorise
+def shelf_detail(id):
+    return site_schema.dump(FixedColdStorage.query.filter_by(id = id).first())
+
+
+@storage.route("/api/add/<entity>", methods=["POST"])
+@token_authorise
+def add_storage_entity(entity):
+    c_dict = {
+        "shelf": Shelf,
+        "fcs": FixedColdStorage,
+        "site": Site,
+        "box": Box,
+        "drawer": Drawer
+    }
+
+    a = c_dict[entity]
+
     r = request.json
     if "id" in r:
-        site = Site.query.filter_by(id = r["id"]).first_or_404()
+        a_ins = a.query.filter_by(id = r["id"]).first_or_404()
     else:
-        site = Site()
+        a_ins = a()
 
     for i in request.json.keys():
-        setattr(site, i, r[i])
+        setattr(a_ins, i, r[i])
 
-    site.created_by = current_user.id
-    db.session.add(site)
+    a_ins.created_by = current_user.id
+    db.session.add(a_ins)
     db.session.commit()
 
     return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
-
-@storage.route("/api/add/fcs")
-@token_authorise
-def add_fixed_cold_storage():
-    r = request.json
-    if "id" in r:
-        fcs = FixedColdStorage.query.filter_by(id=r["id"]).first_or_404()
-    else:
-        fcs = FixedColdStorage()
-
-    for i in request.json.keys():
-        setattr(fcs, i, r[i])
-
-    fcs.created_by = current_user.id
-    db.session.add(fcs)
-    db.session.commit()
-
-    return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
-
-@storage.route("/api/add/fcs")
-@token_authorise
-def add_shelf():
-    r = request.json
-    if "id" in r:
-        s = Shelf.query.filter_by(id=r["id"]).first_or_404()
-    else:
-        s = Shelf()
-
-    for i in request.json.keys():
-        setattr(s, i, r[i])
-
-    s.created_by = current_user.id
-    db.session.add(s)
-    db.session.commit()
-
-    return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
