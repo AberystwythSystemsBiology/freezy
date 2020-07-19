@@ -5,6 +5,17 @@ function freezy-clean() {
     docker-compose run web sh -c "find . -type f -name '*.pyc' -exec rm {} +"
 }
 
+function db-reset() {
+  echo ">>> Removing migrations"
+  docker-compose run web sh -c "rm -rf migrations/"
+  echo ">>> Removing db"
+  docker-compose run web sh -c "rm -rf dev.db"
+  echo ">>> Creating database"
+  freezy-db-create
+  echo ">>> Setting up Admin with password password."
+  freezy-test-admin
+}
+
 function freezy-bwd() {
     freezy-b
     yarn-deps
