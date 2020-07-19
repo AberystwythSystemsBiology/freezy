@@ -11,11 +11,14 @@ def token_authorise(f):
             if current_user.is_authenticated:
                 return f(*args, **kwargs)
             elif "Username" in request.headers:
-                username = request.headers["Username"]
-                token = request.headers["User-Token"]
+                username = request.headers["Username"].replace('"', '')
+                token = request.headers["User-Token"].replace('"', '')
+
+                print(">>>>>>>>>", len(username))
                 uat = UserAccountToken.query.filter_by(username=username).first()
                 if uat is not None and uat.verify_token(token):
-                    login_user(UserAccount.query.filter_by(id = uat.account_id).first(), duration=timedelta(minutes=5))
+
+                    login_user(UserAccount.query.filter_by(id = uat.account_id).first())
                     return f(*args, **kwargs)
                 else:
                     abort(401)

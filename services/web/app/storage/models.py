@@ -9,25 +9,23 @@ class Site(db.Model):
 
     name = db.Column(db.String(256), nullable=False)
 
-    storage = db.relationship("FixedColdStorage", backref="site")
+    storage = db.relationship("FixedColdStorage", backref="sites")
 
     created_on = db.Column(db.DateTime, server_default=db.func.now())
     created_by = db.Column(db.Integer, db.ForeignKey("user_accounts.id"))
+
+    creator = db.relationship("UserAccount", backref="user_accounts")
 
 class FixedColdStorage(db.Model):
     __versioned__ = {}
     __tablename__ = "storage"
 
     id = db.Column(db.Integer, primary_key=True)
-
     name = db.Column(db.String(256), nullable=False)
     type = db.Column(db.Enum(ColdStorageType))
     temperature = db.Column(db.String(10))
-
     site_id = db.Column(db.Integer, db.ForeignKey("sites.id"))
-
     shelves = db.relationship("Shelf", backref="storage")
-
     created_on = db.Column(db.DateTime, server_default=db.func.now())
     created_by = db.Column(db.Integer, db.ForeignKey("user_accounts.id"))
 

@@ -26,6 +26,7 @@ from .panel import panel as panel_blueprint
 from .storage import storage as storage_blueprint
 
 
+
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(app_config[os.environ["FLASK_CONFIG"]])
